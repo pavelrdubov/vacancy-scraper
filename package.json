@@ -1,0 +1,15 @@
+{
+  "name": "vacancy-scraper",
+  "version": "1.0.0",
+  "description": "Еженедельный поиск вакансий (Yandex, Yango, Plata, inDrive) с фильтром по ключевым словам и LatAm, логом в CSV и уведомлениями в Telegram",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test:filter": "node src/filter.test.js",
+    "install:browser": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.47.0",
+    "undici": "^6.21.0"
+  }
+}

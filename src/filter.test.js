@@ -3,14 +3,14 @@ import { passesFilter, matchReason } from "./filter.js";
 import { config } from "../config.js";
 
 const cases = [
-  { v: { title: "Business Development Manager", location: "Karachi, Pakistan" }, expect: true,  note: "ключевое слово BizDev" },
-  { v: { title: "Sales Specialist", location: "Bolivia" },                       expect: true,  note: "LatAm (Bolivia)" },
-  { v: { title: "Strategy & Operations Manager", location: "Cyprus" },           expect: true,  note: "ключевое слово strategy" },
-  { v: { title: "M&A Analyst", location: "Moscow" },                             expect: true,  note: "ключевое слово M&A" },
-  { v: { title: "Voice Support Specialist", location: "Armenia" },               expect: false, note: "не подходит ни по чему" },
-  { v: { title: "Head of FP&A", location: "Mexico City" },                       expect: true,  note: "FP&A + Mexico" },
-  { v: { title: "Backend Developer", location: "Yerevan" },                      expect: false, note: "разработка вне LatAm" },
-  { v: { title: "Corporate Development Lead", location: "Dubai" },               expect: true,  note: "corp dev" },
+  { v: { title: "Head of FP&A", location: "Bogotá, Colombia" },              expect: true,  note: "FP&A + LatAm" },
+  { v: { title: "Chief Financial Controller", location: "Mexico City" },     expect: true,  note: "financial control + LatAm" },
+  { v: { title: "Business Development Manager", location: "Mexico" },        expect: true,  note: "BizDev + LatAm" },
+  { v: { title: "Strategy & Operations Manager", location: "Cyprus" },       expect: false, note: "strategy, но не LatAm (AND-режим)" },
+  { v: { title: "M&A Analyst", location: "Moscow" },                         expect: false, note: "M&A, но не LatAm" },
+  { v: { title: "Sales Specialist", location: "Bolivia" },                   expect: false, note: "в LatAm, но роль в чёрном списке" },
+  { v: { title: "Agente de Cobranza", location: "CDMX" },                    expect: false, note: "чёрный список (cobranza)" },
+  { v: { title: "Backend Developer", location: "Lima" },                     expect: false, note: "в LatAm, но нет ключевого слова" },
 ];
 
 let pass = 0, fail = 0;

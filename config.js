@@ -77,7 +77,23 @@ export const config = {
   //    "latam_only" — все вакансии из LatAm, ключевые слова не важны.
   //    "all" — вообще всё (лог всех вакансий, без фильтра).
   // -----------------------------------------------------------
-  filterMode: "keywords_or_latam",
+  filterMode: "keywords_and_latam",
+
+  // -----------------------------------------------------------
+  // 3b. ЧЁРНЫЙ СПИСОК — роли, которые отсекаем всегда (мусор:
+  //     колл-центр, продажи в поле, взыскание, курьеры и т.п.).
+  //     Проверяется по названию вакансии.
+  // -----------------------------------------------------------
+  excludeKeywords: [
+    "call center", "call centre", "контакт-центр",
+    "cobranz", "collection", "взыскан",
+    "televent", "telesales", "televentas",
+    "ventas", "ventas en campo", "sales specialist", "sales development",
+    "atención al cliente", "customer support", "customer care", "support specialist",
+    "ambassador", "embajador",
+    "cajero", "cashier", "repartidor", "courier", "driver", "limousine",
+    "ejecutivo comercial", "agente",
+  ],
 
   // -----------------------------------------------------------
   // 4. ИСТОЧНИКИ — включай/выключай флагом enabled.

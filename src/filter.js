@@ -6,6 +6,15 @@ const buildRegex = (patterns) =>
 
 const keywordRe = buildRegex(config.keywords);
 const latamRe = buildRegex(config.latamCountries);
+const excludeRe = (config.excludeKeywords && config.excludeKeywords.length)
+  ? buildRegex(config.excludeKeywords)
+  : null;
+
+// Явный «чёрный список» — мусорные роли (колл-центр, продажи, курьеры и т.п.).
+export function isExcluded(vacancy) {
+  if (!excludeRe) return false;
+  return excludeRe.test(`${vacancy.title || ""}`);
+}
 
 // Совпадение по ключевым словам: смотрим в название + описание.
 export function matchesKeywords(vacancy) {
@@ -19,8 +28,9 @@ export function matchesLatam(vacancy) {
   return latamRe.test(haystack);
 }
 
-// Главный фильтр — учитывает filterMode из конфига.
+// Главный фильтр — учитывает filterMode из конфига и чёрный список.
 export function passesFilter(vacancy) {
+  if (isExcluded(vacancy)) return false;   // мусорные роли отсекаем всегда
   const kw = matchesKeywords(vacancy);
   const latam = matchesLatam(vacancy);
 

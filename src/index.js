@@ -24,13 +24,19 @@ async function main() {
   let browser = null;
 
   // Нужен ли браузер (Yango/Yandex рендерятся в JS)?
-  const needBrowser =
+  let needBrowser =
     (config.sources.yango.enabled) || (config.sources.yandex.enabled);
   if (needBrowser) {
-    browser = await chromium.launch({
-      headless: config.browser.headless,
-      ...(proxyUrl ? { proxy: { server: proxyUrl } } : {}),
-    });
+    try {
+      browser = await chromium.launch({
+        headless: config.browser.headless,
+        ...(proxyUrl ? { proxy: { server: proxyUrl } } : {}),
+      });
+    } catch (e) {
+      console.log(`Не удалось запустить браузер: ${e.message}. Yango/Yandex пропускаю.`);
+      browser = null;
+      needBrowser = false;
+    }
   }
 
   // --- Источники без браузера (быстрые JSON API) ---
@@ -41,11 +47,11 @@ async function main() {
     await runSource("inDrive", () => scrapeIndrive(), collected);
   }
 
-  // --- Источники через браузер ---
-  if (config.sources.yango.enabled) {
+  // --- Источники через браузер (только если он запустился) ---
+  if (config.sources.yango.enabled && browser) {
     await runSource("Yango", () => scrapeYango(browser), collected);
   }
-  if (config.sources.yandex.enabled) {
+  if (config.sources.yandex.enabled && browser) {
     await runSource("Yandex", () => scrapeYandex(browser), collected);
   }
 
@@ -98,6 +104,7 @@ async function runSource(name, fn, collected) {
 }
 
 main().catch((e) => {
-  console.error("Фатальная ошибка:", e);
-  process.exit(1);
+  // Не валим весь автозапуск из-за разовой ошибки — логируем и выходим спокойно.
+  console.error("Ошибка прогона:", e);
+  process.exit(0);
 });
